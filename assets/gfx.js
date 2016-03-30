@@ -1,7 +1,8 @@
 var gfx = {};
  
 /**
- * Exemple de tuile
+ * Function mur
+ * @purpose : Génère un sol.
  */
 gfx.sol = function ( $r, $g, $b )
 {
@@ -14,11 +15,11 @@ gfx.sol = function ( $r, $g, $b )
         $color = Graphics.getRGB ( $r, $g, $b );
     }
  
-    //On crée une instance de la classe Shape.
+    // On crée une instance de la classe Shape.
     this.gfx = new Shape();
     this.gfx.name = $color;
 
-    //On accéde a la propriété grapgics
+    // On accéde a la propriété grapgics
     this.gfx.graphics
     				 .beginFill($color)
                      .moveTo(64,0)
@@ -93,4 +94,32 @@ gfx.murTAlea = function ( $r, $g, $b )
         var r = $r - Math.round(Math.random()*20), g = $g - Math.round(Math.random()*20), b = $b - Math.round(Math.random()*20);
  
         return this.mur ( r, g, b );
+};
+
+/**
+ * Function play
+ * @purpose : Génère un bouton play
+ */
+
+gfx.play = function()
+{
+    this.text = new Text("Lancer", "30px Arial", "#ffff00");
+    this.text.textAlign = "center";
+    this.text.textBaseline = "top";
+    this.text.lineHeight = 34;
+    this.text.lineWidth = 134;
+    this.text.setTransform(71,0.8);
+    this.text.shadow = new Shadow("#ff0000",0,0,10);
+ 
+    this.gfx = new Shape();
+    this.gfx.graphics.lf(["#ff6600","#ffff00"],[0,1],-11.6,-35.2,-11.6,28.7)
+            .p("AKNi2QqciHp2CHQiBC0CBCzQJTCVK/iVQB1ikh1jD").f()
+            .s("#ff6600").ss(2.5,1,1,3)
+            .p("AKNi2QB1DDh1CkQq/CVpTiVQiBizCBi0QJ2iHKcCH").cp();
+    this.gfx.setTransform(71.1,25.1);
+ 
+    this.container = new Container ();
+    this.container.addChild ( this.gfx, this.text );
+ 
+    return this.container;
 };

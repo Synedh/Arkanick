@@ -29,6 +29,12 @@ p.tilesHeight = 64;
  * Décalage en X.
  */
 p.offsetX = 0;
+
+/**
+ * Player player
+ * Joueur contrôlable dans le cas de l'utilisation du pathfinding.
+ */
+p.player = null;
  
 /**
  * int offsetY/**
@@ -75,6 +81,11 @@ p.addTile = function ( $tile, $x, $y, $z )
     this.addChild ( $tile.content );
 
     this.update ();
+ 
+    $tile.content.onClick = function ()
+    {
+        this.tile.map.movePlayer ( this.tile.posX, this.tile.posY );
+    };
 };
 
 /**
@@ -83,16 +94,34 @@ p.addTile = function ( $tile, $x, $y, $z )
  */
 p.update = function ()
 {
+        this.updatePos();
+        this.updateDepth();
+};
+ 
+/**
+ * void updatePos
+ * @purpose : Met à jour l'affichage (positions).
+ */
+p.updatePos = function ()
+{
     /**
      * Mise à jour des tuiles.
      */
     this.tiles.forEach ( function($tile)
     {
         $tile.content.x = ( $tile.posY - $tile.posX ) * ($tile.map.tilesWidth/2) + ($tile.offsetX + $tile.map.offsetX);
-        $tile.content.y = ( $tile.posY + $tile.posX ) * ($tile.map.tilesHeight/2) + ($tile.offsetY + $tile.map.offsetY);
+        $tile.content.y = ( $tile.posY + $tile.posX ) * ($tile.map.tilesHeight/2) + ($tile.offsetY + $tile.map.offsetY);              
+
         $tile.content.tile = $tile;
     });
-
+};
+ 
+/**
+ * void updateDepth
+ * @purpose : Met à jour l'affichage (profondeurs).
+ */
+p.updateDepth = function ()
+{
     /**
      * Tri des tuiles pour gérer les profondeurs.
      */
@@ -133,6 +162,76 @@ p.getTileAt = function ( $x, $y, $z )
     });
 
     return r_tile;
+};
+
+/**
+ * Array getGraph
+ * @purpose : Crée une carte de nodes pour le pathfinding.
+ */
+p.getGraph = function ()
+{
+    var graph = [];
+
+    for ( var i = 0, max = this.tiles.length; i < max; i++ )
+    {
+        var tile = this.tiles[i];
+
+        if ( graph[tile.posX] === undefined )
+        {
+            graph[tile.posX] = [];
+        }
+
+        graph[tile.posX][tile.posY] = new Node ( tile.posX, tile.posY, tile.walkable );
+    }
+
+    return graph;
+};
+
+/**
+ * void movePlayer
+ * int $x, int $y : coordonnées de la tuile d'arrivée
+ */
+p.movePlayer = function ( $x, $y )
+{
+    if ( this.player === null )
+    {
+            /**
+             * Pas de joueur, donc pas de pathfinding.
+             */
+            return;
+    }
+
+    var playerX, playerY;
+    if ( this.player.waitingList.length === 0 )
+    {
+        /**
+         * La liste d'attente est vide, on utilise les coordonnées réélles.
+         */
+        playerX = this.player.posX;
+        playerY = this.player.posY;
+    }
+    // else
+    // {
+    //     /**
+    //      * La liste d'attente n'est pas vide, on utilise les coordonnées finales.
+    //      */
+    //     playerX = this.player.waitingList[this.player.waitingList.length-1][0];
+    //     playerY = this.player.waitingList[this.player.waitingList.length-1][1];
+    // }
+
+    var graph = this.getGraph();
+    var start = graph[playerX][playerY];
+    var end = graph[$x][$y];
+
+    var path = Pathfinder.findPath ( graph, start, end );
+
+    while ( path.length !== 0 )
+    {
+            var toTile = path.shift ();
+
+            // this.player.move ( toTile.line - this.player.posX, toTile.col - this.player.posY );
+            this.player.smoothMove ( toTile.line, toTile.col );
+    }
 };
 
 /**
