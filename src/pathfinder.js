@@ -152,7 +152,7 @@ var Pathfinder =
                 finalPath.push ( lastNode );
                 lastNode = lastNode.parent;
         }
-
+        console.log('Bouge de ' + finalPath.length + ' cases.');
         return finalPath.reverse();
     },
 
@@ -225,6 +225,17 @@ var Pathfinder =
         return current_node;
     },
 
+    isPosInPlayerList: function (posX, posY)
+    {
+        pl = myMap.playerList;
+        for (i = 0; i < pl.length; ++i)
+        {
+            if (pl[i].posX === posX && pl[i].posY == posY)
+                return pl[i];
+        }
+        return null;
+    },
+
     /**
      * Function getNeighbours
      * Node $node : Node pour laquelle il faut chercher les voisins.
@@ -236,24 +247,50 @@ var Pathfinder =
 
         if ( $node.line > 0 )
         {
-            neighbours.push ( $graph[$node.line - 1][$node.col] );
+            var player = isPosInPlayerList ( $node.line - 1, $node.col );
+            if ( player )
+            {
+                neighbours.push ( player );
+            }
+            else
+            {
+                neighbours.push($graph[$node.line - 1][$node.col]);
+            }
         }
 
         if ( $node.line + 1 < $graph.length )
         {
-            neighbours.push ( $graph[$node.line + 1][$node.col] );
+            var player = isPosInPlayerList ( $node.line + 1, $node.col );
+            if ( player )
+            {
+                neighbours.push ( player );
+            }
+            else
+            {
+                neighbours.push($graph[$node.line + 1][$node.col]);
+            }
         }
 
-        if ( $node.col > 0 )
-        {
-            neighbours.push ( $graph[$node.line][$node.col - 1] );
+        if ( $node.col > 0 ) {
+            var player = isPosInPlayerList($node.line, $node.col - 1);
+            if ( player ) {
+                neighbours.push( player );
+            }
+            else
+            {
+                neighbours.push($graph[$node.line][$node.col - 1]);
+            }
         }
 
-        if ( $node.col + 1 < $graph[0].length )
-        {
-            neighbours.push ( $graph[$node.line][$node.col + 1] );
+        if ( $node.col + 1 < $graph[0].length ) {
+            var player = isPosInPlayerList($node.line, $node.col + 1);
+            if ( player ) {
+                neighbours.push( player );
+            }
+            else {
+                neighbours.push($graph[$node.line][$node.col + 1]);
+            }
         }
-
         return neighbours;
     },
 

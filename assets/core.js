@@ -27,19 +27,19 @@ function onKeyDown ($e)
     {
         case 37: //Gauche
         case 81: // Q
-            player.move ( 0, -1 );
+            myMap.player.move ( 0, -1 );
             break;
         case 38: //Haut
         case 90: // Z
-            player.move ( -1, 0 );
+            myMap.player.move ( -1, 0 );
             break;
         case 39: //Droite
         case 68: // D
-            player.move ( 0, 1 );
+            myMap.player.move ( 0, 1 );
             break;
         case 40: // Bas
         case 83: // S
-            player.move ( 1, 0 );
+            myMap.player.move ( 1, 0 );
             break;
         case 27: // Escape
             menu( "Restart !" );
@@ -100,20 +100,24 @@ play.onClick = function ( $e )
     myMap.offsetY = 200;
     stage.addChild ( myMap );
 
-    player = new Player ( TileType.DRAW, gfx.mur ( 255, 0, 0 ), true );
-    myMap.player = player;
-    myMap.addTile ( player, 2, 2, 1 );
-    map = map1
+    p1 = new Player ( TileType.DRAW, gfx.mur ( 255, 0, 0 ), false );
+    myMap.addTile ( p1, 0, 1, 1 );
+    p2 = new Player ( TileType.DRAW, gfx.mur ( 0, 0, 255 ), false );
+    myMap.addTile ( p2, 0, 0, 1 );
+    p3 = new Player ( TileType.DRAW, gfx.mur ( 0, 255, 0 ), false );
+    myMap.addTile ( p3, 1, 0, 1 );
+    myMap.player = p1;
+    map = map2;
 
     for ( var i = 0; i < map[0].length; i++ )
     {
         for ( var j = 0; j < map.length; j++ )
         {
-            if ( map[i][j] === 1 )
+            if ( map[j][i] === 1 )
             {
                 myMap.addTile ( new Tile ( TileType.DRAW, gfx.sol(120,120,120), true ), i, j, 0 );
             }
-            else if (map[i][j] === 2 )
+            else if (map[j][i] === 2 )
             {
                 myMap.addTile ( new Tile ( TileType.DRAW, gfx.mur(80,80,80), false ), i, j, 1 );
             }

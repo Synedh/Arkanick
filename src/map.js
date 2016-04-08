@@ -35,6 +35,12 @@ p.offsetX = 0;
  * Joueur contrôlable dans le cas de l'utilisation du pathfinding.
  */
 p.player = null;
+
+/**
+ *  PlayerList playerList
+ *  Liste des jours contrôlables.
+ */
+p.playerList = [];
  
 /**
  * int offsetY/**
@@ -62,6 +68,18 @@ p.removeTile = function ( $tile )
  */
 p.offsetY = 0;
 
+var isPosInPlayerList = function (posX, posY)
+{
+    i = 0;
+    pl = myMap.playerList;
+    for (i; i < pl.length; ++i)
+    {
+        if (pl[i].posX === posX && pl[i].posY == posY)
+            return pl[i];
+    }
+    return null;
+};
+
 /**
  * void addTile
  * @purpose : Ajoute une tuile à la carte.
@@ -84,7 +102,15 @@ p.addTile = function ( $tile, $x, $y, $z )
  
     $tile.content.onClick = function ()
     {
-        this.tile.map.movePlayer ( this.tile.posX, this.tile.posY );
+        var playerOnClick = isPosInPlayerList( this.tile.posX, this.tile.posY );
+        if ( playerOnClick && myMap.player.waitingList.length == 0 )
+        {
+            myMap.player = playerOnClick;
+        }
+        else
+        {
+            this.tile.map.movePlayer( this.tile.posX, this.tile.posY );
+        }
     };
 };
 
@@ -227,10 +253,10 @@ p.movePlayer = function ( $x, $y )
 
     while ( path.length !== 0 )
     {
-            var toTile = path.shift ();
+        var toTile = path.shift ();
 
-            // this.player.move ( toTile.line - this.player.posX, toTile.col - this.player.posY );
-            this.player.smoothMove ( toTile.line, toTile.col );
+        // this.player.move ( toTile.line - this.player.posX, toTile.col - this.player.posY );
+        this.player.smoothMove ( toTile.line, toTile.col );
     }
 };
 

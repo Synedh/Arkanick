@@ -99,10 +99,10 @@ p.construct = function ( $type, $content, $walkable, $offsetX, $offsetY )
  */
 p.dispose = function ()
 {
-this.map = null;
-this.type = null;
-this.content = null;
-this.walkable = null;
-this.offsetX = null;
-this.offsetY = null;      
+    this.map = null;
+    this.type = null;
+    this.content = null;
+    this.walkable = null;
+    this.offsetX = null;
+    this.offsetY = null;
 };
