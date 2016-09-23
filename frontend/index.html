@@ -10,18 +10,18 @@
         <script src="http://code.createjs.com/preloadjs-0.1.0.min.js"></script>
         <script src="http://code.createjs.com/tweenjs-0.2.0.min.js"></script>
  
-        <title>Arkanick</title>
+        <title>Arkanick - log on</title>
     </head>
     <body>
-        <canvas id="gameview" width="800" height="600">
-            Sorry, your browser does not support the Canvas' technology. Please, use a more recent one.
-        </canvas>
+        <img src="src/img/logo.gif" alt="logo">
 
-        <!--[if lt IE 9]><script>
-        G_vmlCanvasManager.initElement( document.getElementById('gameview') );
-        </script><![endif]-->
+        <from action="/" method="post" id="form">
+            <input type="text" id="pseudo" placeholder="Surname" autofocus>
+            <input type="submit" id="logon" value="Connect">
+        </from>
 
         <!-- JS -->
+        <script type="text/javascript" src="src/serverListener.js"></script>
         <script type="text/javascript" src="src/maps/1.js"></script>
         <script type="text/javascript" src="src/maps/2.js"></script>
         <script type="text/javascript" src="src/tiletype.js"></script>
